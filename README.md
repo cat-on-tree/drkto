@@ -1,3 +1,6 @@
-# drkto
-This respiratory contains all the code and data access of our article: Overcoming Topology Bias and Cold-Start Limita-tions in Drug Repurposing: A Clinical-Outcome-Aligned LLM Framework.
-Still ongoing, I'm working busy to gather together all the code and data sources :( 
+# Overcoming Topology Bias and Cold-Start Limitations in Drug Repurposing: A Clinical-Outcome-Aligned LLM Framework
+# Not finished yet, still ongoing, I'm working hard with it :(
+> This repository contains the source code and data acquisition methods for the paper “Overcoming Topology Bias and Cold-Start Limitations in Drug Repurposing: A Clinical-Outcome-Aligned LLM Framework”.
+![Graphical Abstract](graphical_abstract.png)
+
+*Graphical abstract: Traditional Graph Neural Networks (GNNs) and vanilla LLMs suffer from Popularity Bias, disproportionately favoring high-degree nodes (e.g., Semagacestat) regardless of clinical efficacy, while overlooking sparse "cold-start" candidates (e.g., Thalidomide). Our framework incorporates a Clinical Arbiter mechanism via KTO Optimization. The model generates CoT for both candidates. Phase III clinical trial outcomes serve as ground-truth rewards: popular but failed drugs receive a penalty, while valid “cold” candidate receive a positive reinforcement. This feedback loop aligns the LLM's latent space with clinical reality, enabling it to reject scientific hype and identify hidden therapeutic gems.*
