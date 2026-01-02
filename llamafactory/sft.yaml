@@ -1,0 +1,52 @@
+### model
+model_name_or_path: /lustre/home/2201210932/data/model/Qwen3-8B
+trust_remote_code: true
+enable_thinking: None
+
+### method
+stage: sft
+do_train: true
+finetuning_type: full
+freeze_language_model: false
+deepspeed: /lustre/home/2201210932/work/LLaMA-Factory/examples/deepspeed/ds_z3_config.json
+
+### dataset
+dataset: drug_repurpose
+template: qwen3
+cutoff_len: 2048
+# max_samples: 1000
+overwrite_cache: true
+preprocessing_num_workers: 16
+dataloader_num_workers: 4
+
+### output
+output_dir: /lustre/home/2201210932/data/saved/Qwen3-8B-sft
+logging_steps: 10
+save_steps: 500
+plot_loss: true
+overwrite_output_dir: true
+save_only_model: false
+report_to: none  # choices: [none, wandb, tensorboard, swanlab, mlflow]
+
+### train
+per_device_train_batch_size: 1
+gradient_accumulation_steps: 2
+learning_rate: 1.0e-5
+num_train_epochs: 3.0
+lr_scheduler_type: cosine
+warmup_ratio: 0.1
+bf16: true
+ddp_timeout: 180000000
+resume_from_checkpoint: false
+
+### eval
+eval_dataset: drug_repurpose_val
+per_device_eval_batch_size: 1
+eval_strategy: steps
+eval_steps: 500
+
+# swanlab
+use_swanlab: true
+swanlab_project: LLaMA-Factory
+swanlab_run_name: Qwen3-8B_sft
+swanlab_mode: local
