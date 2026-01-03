@@ -16,7 +16,9 @@ To ensure compatibility with GPU acceleration, check your system's CUDA installa
 
 ```bash
 nvcc --version
-# or
+```
+or
+```bash
 nvidia-smi
 ```
 
@@ -89,3 +91,90 @@ We provide the modified main code here.Please use the files in [medreason](medre
 We utilized [LLaMA-Factory](https://github.com/hiyouga/LlamaFactory/) for training and optimizing. Please refer to their project for details.  
 We provide our .yaml configurations in [llamafactory](llamafactory) dictionary.
 
+## 3. Evaluation
+### Drug Repositioning datasets
+Original evaluation datasets were obtained from [Mirage](https://www.kaggle.com/datasets/ariasha/drug-repositioning?resource=download), as a test data after processing. Training for GNNs were performed on PrimeKG. The [drug_repositioning](drug_repositioning) dictionary contains all the scripts for data splitting, model training and evaluating.  
+You need to place processed test datasets in drug_repositioning/data/benchmark/Kaggle_drug_repositioning/ and PrimeKG datasets in drug_repositioning/data/benchmark/PrimeKG/ for proper use.
+For GNN model (RGCN, HGT, HAN), training and testing:
+```bash
+bash gnn.sh
+```
+For TxGNN training and testing:
+```bash
+python txgnn.py
+```
+and
+```bash
+python txgnn_evaluate.py
+```
+> Note: The relation id in cold-start and degree-matched datasets may not correct, we have provided the right relation id and designated them in evaluating scripts. There would be no mistake if you use the model weights provided by us.
+> However, if you determine to train the model by yourself, please use[cold_start_check.py](drug_repositioning/src/cold_start_check.py) and [degree_matched_check.py](drug_repositioning/src/degree_matched_check.py) to confirm the right relation id and substitute them in [gnn.py](drug_repositioning/src/gnn.py) and [txgnn_evaluate.py](drug_repositioning/src/txgnn_evaluate.py).
+
+For LLM testing, please use [llm_local_8bit.py](drug_repositioning/src/llm_local_8bit.py) for local model; [llm_logprob.py](drug_repositioning/src/llm_logprob.py) for remote api, and [llm_plot.py](drug_repositioning/src/llm_plot.py) for evaluation.
+
+### General Biomedicine benchmark
+Raw evaluation datasets: [Chemprot](https://huggingface.co/datasets/clinicalnlplab/chemprot_test); [BioASQ](https://huggingface.co/datasets/kroshan/BioASQ).
+You need to place processed chemprot.json and BioASQ.json in biomedicine/data/evaluation/benchmark/ for proper use.
+You need to download and place [BERT base model](https://huggingface.co/google-bert/bert-base-uncased) into biomedicine_benchmark/model/ for bert score calculation.
+#### Chemprot benchmark
+First, generate raw answers:
+```bash
+python chemprot_answer_api.py --model xx --output xx.json --threads 4 --log logs/xx-answer.log #enable_thinking (Qwen series model)
+```
+If you use local model, run:
+```bash
+python chemprot_answer.py --model xx --output xx.json --threads 4 --log logs/xx-answer.log #enable_thinking (Qwen series model)
+```
+Then, Summarize the raw answer:
+```bash
+python chemprot_test_api.py --input xx-answer.json --output xx-test.json --log logs/xx-test.log
+```
+Finally, output the results:
+```bash
+python chemprot_test_result.py --input xx-test.json -result xx-result.txt
+```
+#### BioASQ benchmark
+The same, you need to generate the raw answer first. Then, you may directly calculate the bert relative scores:
+```bash
+python bioASQ_bert_result.py --answer xx-answer.json --result xx-bert.txt --log logs/xx-bert.log
+```
+For gpt score calculation:
+```bash
+python bioASQ_gpt_api.py --answer xx-answer.json --output xx-gpt.json --log logs/xx-gpt.log
+```
+and
+```bash
+python gpt_result.py --test xx-gpt.json --result xx-gpt.txt
+```
+### Sensitivity analysis
+run:
+```bash
+python chemprot_answer_sp.py --model_dir your_local_model_dir --output xx.json --device cuda --log logs/xx.log --enable_thinking --temperature x --top_k x
+python BioASQ_answer_sp.py --model_dir your_local_model_dir --output xx.json --device cuda --log logs/xx.log --enable_thinking --temperature x --top_k x
+```
+You may change the temperature and top-K freely. The subsequent result analysis are the same to previous section.
+
+### Gradient attribution
+Run:
+```bash
+python gradient_attribution.py --model your_local_model_dir
+```
+> Note: You need place the input file as the script denotes. You may find it in our uploaded files in ScienceDB.
+
+### Molecular docking
+We utilized [DrugReAlign](https://github.com/jinhang23/DrugReAlign) framework to perform molecular docking and assess our model. Please refer to their project for details.
+
+## Citation
+
+If you find this project helpful, please consider citing our work as follows:
+
+```bibtex
+@inproceedings{your2024paper,
+  title={Overcoming Topology Bias and Cold-Start Limitations in Drug Repurposing: A Clinical-Outcome-Aligned LLM Framework},
+  author={YourName, Collaborator1, Collaborator2, ...},
+  booktitle={Proceedings of Some Conference or Journal},
+  year={2024},
+  address={Somewhere},
+  publisher={PublisherName},
+  url={https://arxiv.org/abs/xxxx.xxxxx}
+}
