@@ -1,7 +1,7 @@
 # Overcoming Topology Bias and Cold-Start Limitations in Drug Repurposing: A Clinical-Outcome-Aligned LLM Framework
-# Not finished yet, still ongoing, I'm working hard with it :(
+# Mostly finished, if you encounter any problem, please let me know by issues. :)
 
-All the materials, including processed training and optimizing datasets, GNN model weights, evaluation datasets and results have been uploaded to [ScienceDB](https://www.scidb.cn).  
+All the materials, including processed training and optimizing datasets, GNN model weights, evaluation datasets and results have been uploaded to [ScienceDB](https://www.scidb.cn/s/3yIZ3i).  
 The model training and optimizing logs can be viewed at [Swanlab](https://swanlab.cn/@MasterCat/LLaMA-Factory/overview)  
 The SFT and KTO model weights can be downloaded from [SFT model weights](https://www.modelscope.cn/collections/qwen3dr-sft-7203b24e95d14b) and [KTO model weights](https://www.modelscope.cn/collections/qwen3dr-8b-kto-8d1dc7eee6ed42). Please follow the instruction of [Modelscope](https://www.modelscope.cn/) for use.
 
